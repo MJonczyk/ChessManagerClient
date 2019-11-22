@@ -1,0 +1,43 @@
+<mat-card id="buttonContainer">
+  <button mat-icon-button color="warn">
+    <mat-icon>first_page</mat-icon>
+  </button>
+  <button mat-icon-button color="warn">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <button mat-icon-button color="warn">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <button mat-icon-button color="warn">
+    <mat-icon>last_page</mat-icon>
+  </button>
+</mat-card>
+<mat-card id="container" [style.minHeight]="'65.5%'" [style.maxHeight]="'65.5%'"  [style.minWidth]="'96%'">
+  <div id="chessContainer">
+    <div id="board" style="width: 500px"></div>
+  </div>
+  <div id="gameInfo">
+    <table>
+      <tr>
+        <td class="mat-h1">{{game.white}}</td>
+        <td class="mat-h1">{{game.result}}</td>
+        <td class="mat-h1">{{game.black}}</td>
+      </tr>
+      <tr>
+        <td class="mat-h4" *ngIf="game.whiteElo !== -1">{{game.whiteElo}}</td>
+        <td class="mat-h4" *ngIf="game.whiteElo == -1">-</td>
+        <td class="mat-h4">{{game.date}}</td>
+        <td class="mat-h4" *ngIf="game.blackElo !== -1">{{game.blackElo}}</td>
+        <td class="mat-h4" *ngIf="game.blackElo == -1">-</td>
+      </tr>
+      <tr>
+        <td class="mat-h4" colspan="3">{{game.site}}, {{game.event}}</td>
+      </tr>
+    </table>
+  </div>
+</mat-card>
+<mat-card [style.minHeight]="'22%'" [style.maxHeight]="'22%'" [style.minWidth]="'96%'">
+  <div class="mat-h3">
+    {{game.moves}}
+  </div>
+</mat-card>

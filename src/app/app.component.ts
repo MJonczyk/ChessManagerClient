@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'chessmanager-client';
+  currentGame = null;
+
+  public handleSelectedGame(selectedGame) {
+    this.currentGame = selectedGame;
+  }
 }

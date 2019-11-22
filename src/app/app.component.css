@@ -1,0 +1,10 @@
+.mainContainer {
+  height : 93vh;
+  width: 100vw;
+}
+
+.menuBar {
+  height: 7vh;
+  width: 100vw;
+  background-color: indianred;
+}

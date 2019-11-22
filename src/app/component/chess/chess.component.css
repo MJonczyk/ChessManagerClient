@@ -1,0 +1,33 @@
+.container {
+  width: 100%;
+}
+
+#buttonContainer {
+  height: 4.5vh;
+  width: 100%;
+  text-align: center;
+}
+
+#chessContainer {
+  margin-left: 14vw;
+  height: 65%;
+  width: 38vw;
+  text-align: center;
+}
+
+#gameInfo {
+  margin-left: 8.5vw;
+  height: 15%;
+  width: 38vw;
+  text-align: center;
+}
+
+table {
+  table-layout: fixed;
+  width: 700px;
+}
+td {
+  text-align: center;
+  font-family: sans-serif;
+}
+
