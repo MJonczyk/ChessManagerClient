@@ -5,6 +5,7 @@ import {Observable, of} from 'rxjs';
 import {GamesResponseType} from '../model/GamesResponseType';
 import {catchError, map} from 'rxjs/operators';
 
+
 @Injectable({
   providedIn: 'root'
 })

@@ -11,6 +11,7 @@ export class Game {
   moves: string;
   whiteElo: number;
   blackElo: number;
+  gameType: string;
 
   constructor() {
     this.id = -1;
@@ -25,5 +26,6 @@ export class Game {
     this.moves = '';
     this.whiteElo = -1;
     this.blackElo = -1;
+    this.gameType = '';
   }
 }

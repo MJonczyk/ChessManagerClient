@@ -1,69 +1,81 @@
-<mat-card class="options" fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
-  <mat-form-field fxFlex="40%">
-    <div>
-      <input matInput type="text" (keyup)="filterGames($event.target.value)" placeholder="Filter">
+<mat-toolbar id="loginToolbar">
+  <h2>ChessManager</h2>
+  <span class="spacer"></span>
+  <a mat-button *ngIf="isLoggedIn$ | async" (click)="this.auth.logout()" > Logout </a>
+  <a mat-button *ngIf="!(isLoggedIn$ | async)" [routerLink]="'/login'"> Login </a>
+  <a mat-button *ngIf="!(isLoggedIn$ | async)" [routerLink]="'/register'"> Register </a>
+</mat-toolbar>
+<div class="mainContainer" fxLayout="row">
+  <div fxFlex="45">
+    <mat-card class="options" fxLayout fxLayoutAlign="center center" fxLayoutGap="24px">
+      <mat-form-field fxFlex="40%">
+        <div>
+          <input matInput type="text" (keyup)="filterGames($event.target.value)" placeholder="Filter">
+        </div>
+      </mat-form-field>
+      <div>
+        <button mat-raised-button (click)="openUploadDialog()" *ngIf="isLoggedIn$ | async">Add</button>
+      </div>
+      <div>
+        <mat-checkbox color="warn" [(ngModel)]="checked" *ngIf="isLoggedIn$ | async">Show All Games</mat-checkbox>
+      </div>
+    </mat-card>
+
+    <div class="example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="white">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> White</th>
+          <td mat-cell *matCellDef="let game"> {{game.white}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="black">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Black</th>
+          <td mat-cell *matCellDef="let game"> {{game.black}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="result">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Result</th>
+          <td mat-cell *matCellDef="let game"> {{game.result}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="event">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Event</th>
+          <td mat-cell *matCellDef="let game"> {{game.event}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
+          <td mat-cell *matCellDef="let game"> {{game.date}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="round">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Round</th>
+          <td mat-cell *matCellDef="let game"> {{game.round}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="download">
+          <th mat-header-cell *matHeaderCellDef> Download</th>
+          <td mat-cell *matCellDef="let game">
+            <button mat-icon-button color="warn" (click)="downloadFile(game.id)">
+              <mat-icon class="mat-18">cloud_download</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef> Delete</th>
+          <td mat-cell *matCellDef="let game">
+            <button mat-icon-button color="warn" (click)="delete(game.id)" *ngIf="game.gameType == 'private'">
+              <mat-icon class="mat-18">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="orderedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: orderedColumns;" (click)="setGame(row)"
+            [ngClass]="{ 'highlight': selectedRowIndex == row.id }"></tr>
+      </table>
     </div>
-  </mat-form-field>
-  <div>
-    <button mat-raised-button (click)="openUploadDialog()">Add</button>
   </div>
-  <div>
-    <mat-checkbox color="warn" [(ngModel)]="checked">Show All Games</mat-checkbox>
-  </div>
-</mat-card>
-
-<div class="example-container mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="white">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> White</th>
-      <td mat-cell *matCellDef="let game"> {{game.white}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="black">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Black</th>
-      <td mat-cell *matCellDef="let game"> {{game.black}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="result">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Result</th>
-      <td mat-cell *matCellDef="let game"> {{game.result}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="event">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Event</th>
-      <td mat-cell *matCellDef="let game"> {{game.event}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date</th>
-      <td mat-cell *matCellDef="let game"> {{game.date}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="round">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Round</th>
-      <td mat-cell *matCellDef="let game"> {{game.round}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="download">
-      <th mat-header-cell *matHeaderCellDef> Download</th>
-      <td mat-cell *matCellDef="let game">
-        <button mat-icon-button color="warn" (click)="downloadFile(game.id)">
-          <mat-icon class="mat-18">cloud_download</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef> Delete</th>
-      <td mat-cell *matCellDef="let game">
-        <button mat-icon-button color="warn" (click)="delete(game.id)">
-          <mat-icon class="mat-18">delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="orderedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: orderedColumns;" (click)="setGame(row)"
-        [ngClass]="{ 'highlight': selectedRowIndex == row.id }"></tr>
-  </table>
+  <app-chess fxFlex="55" [game]="selectedGame"></app-chess>
 </div>

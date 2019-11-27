@@ -6,26 +6,32 @@ import {
   MatDialogModule,
   MatFormFieldModule,
   MatIconModule, MatInputModule,
-  MatListModule,
+  MatListModule, MatMenuModule,
   MatProgressBarModule, MatSortModule,
-  MatTableModule
+  MatTableModule, MatToolbarModule
 } from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {GamesListComponent} from './component/games-list/games-list.component';
 import {UploadDialogComponent} from './component/upload-dialog/upload-dialog.component';
 import {ChessComponent} from './component/chess/chess.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {LoginComponent} from './component/login/login.component';
+import {RegisterComponent} from './component/register/register.component';
+import {AppRoutingModule} from './app-routing.module';
+import {TokenInterceptor} from './helper/TokenInterceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     GamesListComponent,
     UploadDialogComponent,
-    ChessComponent
+    ChessComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -45,11 +51,21 @@ import {FormsModule} from '@angular/forms';
     MatSortModule,
     MatCheckboxModule,
     FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    MatMenuModule,
+    MatToolbarModule,
   ],
   entryComponents: [
     UploadDialogComponent
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

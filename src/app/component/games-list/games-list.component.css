@@ -1,7 +1,23 @@
+#loginToolbar {
+  background-color: indianred;
+  color: white;
+  /*font-family: Georgia, serif;*/
+}
+
 .options {
   height: 10%;
   width: 100%;
 }
+
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
 .mat-row:hover {
   background-color: firebrick;
 }
@@ -24,5 +40,16 @@ th.mat-header-cell {
 }
 
 .highlight {
+  background-color: indianred;
+}
+
+.mainContainer {
+  height : 93vh;
+  width: 100vw;
+}
+
+.menuBar {
+  height: 7vh;
+  width: 100vw;
   background-color: indianred;
 }

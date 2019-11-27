@@ -1,0 +1,38 @@
+#loginToolbar {
+  background-color: indianred;
+  color: white;
+  /*font-family: Georgia, serif;*/
+}
+
+#formContainer {
+  text-align: center;
+  width: 100%;
+}
+
+h3 {
+  margin: 32px 0 32px 0;
+  font-family: sans-serif;
+}
+
+form {
+  text-align: left;
+  display: inline-block;
+}
+
+a {
+  margin: 0 24px 0 24px;
+  color: indianred;
+}
+
+button {
+  margin: 0 24px 0 24px;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  background-color: indianred;
+  border-color: indianred;
+}
+
+#appLink {
+  display: block;
+}

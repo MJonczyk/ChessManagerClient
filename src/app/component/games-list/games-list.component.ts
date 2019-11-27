@@ -4,6 +4,8 @@ import {FileService} from '../../service/file.service';
 import {UploadDialogComponent} from '../upload-dialog/upload-dialog.component';
 import {Game} from '../../model/Game';
 import {GameService} from '../../service/game.service';
+import {AuthenticationService} from '../../service/authentication.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-games-list',
@@ -15,15 +17,18 @@ export class GamesListComponent implements OnInit, AfterViewInit {
   public dataSource = new MatTableDataSource<Game>();
   public selectedRowIndex = -1;
   checked = true;
+  private isLoggedIn$: Observable<boolean>;
 
-  @Output() selectedGame = new EventEmitter<any>();
+  selectedGame = new Game();
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  constructor(public dialog: MatDialog, private fileService: FileService, private gameService: GameService) {
+  constructor(public dialog: MatDialog, private fileService: FileService, private gameService: GameService,
+              private auth: AuthenticationService) {
   }
 
   ngOnInit() {
     this.getAllGames();
+    this.isLoggedIn$ = this.auth.isLoggedIn;
   }
 
   ngAfterViewInit(): void {
@@ -55,7 +60,7 @@ export class GamesListComponent implements OnInit, AfterViewInit {
   }
 
   public setGame(game: Game) {
-    this.selectedGame.emit(game);
+    this.selectedGame = game;
     this.selectedRowIndex = game.id;
   }
 }
