@@ -1,14 +1,11 @@
-.add-files-btn {
-  float: right;
-}
-
 button {
   color: white;
   background-color: indianred;
 }
 
-mat-progress-bar {
-  background-color: indianred;
+mat-dialog-content {
+  text-align: center;
+  padding-top: 48px;
 }
 
 :host {

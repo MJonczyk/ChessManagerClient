@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import * as Chess from 'chess.js';
+import Move = ChessJS.Move;
 
 declare var ChessBoard: any;
 
@@ -8,12 +9,41 @@ declare var ChessBoard: any;
   templateUrl: './chess.component.html',
   styleUrls: ['./chess.component.css']
 })
-export class ChessComponent implements OnInit {
+export class ChessComponent implements OnInit, OnChanges {
+
   @Input() public game;
   private board: ChessBoardInstance;
   private gameEngine: ChessInstance;
+  private moves: string[];
+  private currentMoveIndex: number;
 
-  constructor() { }
+  static parseMoveForward(move: Move) {
+    return move.from + '-' + move.to;
+  }
+
+  static parseMoveBackward(move: Move) {
+    return move.to + '-' + move.from;
+  }
+
+  constructor() {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.gameEngine.reset();
+    this.board.start();
+    console.log(this.moves);
+    this.moves = this.game.moves.split(' ');
+    console.log(this.moves);
+    for (let i = 0; i < this.moves.length; i++) {
+      if (this.moves[i].includes('.')) {
+        this.moves[i] = this.moves[i].substring(this.moves[i].indexOf('.') + 1);
+      }
+    }
+    console.log(this.moves);
+    this.moves.splice(this.moves.length - 1);
+    console.log(this.moves);
+    this.currentMoveIndex = 0;
+  }
 
   ngOnInit() {
     this.gameEngine = new Chess();
@@ -78,7 +108,7 @@ export class ChessComponent implements OnInit {
     };
 
     const boardConfig: ChessBoardJS.BoardConfig = {
-      draggable: true,
+      draggable: false,
       position: 'start',
       onDragStart: onDragStartFunc,
       onDrop: onDropFunc,
@@ -87,6 +117,34 @@ export class ChessComponent implements OnInit {
 
     const board = ChessBoard('board', boardConfig);
     return board;
+  }
+
+  clear() {
+    this.gameEngine.reset();
+    this.board.start();
+    this.currentMoveIndex = 0;
+  }
+
+  undo() {
+    this.gameEngine.undo();
+    this.board.position(this.gameEngine.fen());
+    if (this.currentMoveIndex !== 0) {
+      this.currentMoveIndex--;
+    }
+  }
+
+  nextMove() {
+    this.gameEngine.move(this.moves[this.currentMoveIndex]);
+    this.board.position(this.gameEngine.fen());
+    if (this.currentMoveIndex !== this.moves.length - 1) {
+      this.currentMoveIndex++;
+    }
+  }
+
+  playPGN() {
+    console.log(this.gameEngine.load_pgn(this.game.moves));
+    this.board.position(this.gameEngine.fen());
+    this.currentMoveIndex = this.moves.length - 1;
   }
 
 }

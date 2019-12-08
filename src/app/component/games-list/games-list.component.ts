@@ -6,6 +6,7 @@ import {Game} from '../../model/Game';
 import {GameService} from '../../service/game.service';
 import {AuthenticationService} from '../../service/authentication.service';
 import {Observable} from 'rxjs';
+import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-games-list',
@@ -18,6 +19,7 @@ export class GamesListComponent implements OnInit, AfterViewInit {
   public selectedRowIndex = -1;
   checked = true;
   private isLoggedIn$: Observable<boolean>;
+  private showAllGames = true;
 
   selectedGame = new Game();
   @ViewChild(MatSort, {static: false}) sort: MatSort;
@@ -40,9 +42,13 @@ export class GamesListComponent implements OnInit, AfterViewInit {
   }
 
   public openUploadDialog() {
-    this.dialog.open(UploadDialogComponent, {
+    const uploadDialog = this.dialog.open(UploadDialogComponent, {
       width: '50%',
       height: '50%',
+    });
+
+    uploadDialog.afterClosed().subscribe(() => {
+      this.gameService.getGames().subscribe(games => { this.dataSource.data = games; });
     });
   }
 
@@ -50,17 +56,60 @@ export class GamesListComponent implements OnInit, AfterViewInit {
     this.fileService.downloadPGN(id);
   }
 
+  public async downloadDatabase() {
+    this.fileService.downloadDatabase();
+  }
+
   public delete(id: number) {
-    this.gameService.deleteGame(id).subscribe();
-    this.gameService.getGames().subscribe(games => { this.dataSource.data = games; });
+    const deleteDialog = this.dialog.open(DeleteDialogComponent, {
+      width: '25%',
+      height: '25%',
+      data: {id: id}
+    });
+    deleteDialog.afterClosed().subscribe(() => {
+      this.gameService.getGames().subscribe(games => { this.dataSource.data = games; });
+    });
   }
 
   public filterGames(value: string) {
     this.dataSource.filter = value.trim().toLocaleLowerCase();
   }
 
+  public filterGameType() {
+    if (this.showAllGames) {
+      this.dataSource.filter = 'private';
+      this.showAllGames = false;
+    } else {
+      this.dataSource.filter = '';
+      this.showAllGames = true;
+    }
+  }
+
   public setGame(game: Game) {
     this.selectedGame = game;
     this.selectedRowIndex = game.id;
+  }
+
+  public isGameDeletable(gameType: string) {
+    if (this.auth.role === 'ROLE_ADMIN') {
+      return true;
+    } else {
+      if (this.auth.role === 'ROLE_USER' && gameType === 'private') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public showAllGameCheckbox() {
+    return this.auth.role === 'ROLE_USER';
+  }
+
+  public showDownloadDBButton() {
+    return this.auth.role === 'ROLE_USER';
+  }
+
+  public showAddButton() {
+    return this.auth.role !== '';
   }
 }

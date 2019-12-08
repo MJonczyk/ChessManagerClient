@@ -4,6 +4,12 @@
   /*font-family: Georgia, serif;*/
 }
 
+#usernameInfo {
+  color: white;
+  font-size: 14px;
+  padding: 0 16px 0 16px;
+}
+
 .options {
   height: 10%;
   width: 100%;

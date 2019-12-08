@@ -4,6 +4,7 @@ import {map} from 'rxjs/operators';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Token} from '../model/Token';
 import {Router} from '@angular/router';
+import {Role} from '../model/Role';
 
 const url = 'http://localhost:8080';
 
@@ -12,10 +13,14 @@ const url = 'http://localhost:8080';
 })
 export class AuthenticationService {
   public token: string;
+  public username: string;
+  public role: string;
   public isLoggedIn = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private router: Router) {
     this.token = null;
+    this.role = '';
+    this.username = '';
   }
 
   public login(username, password): Observable<Token> {
@@ -28,8 +33,20 @@ export class AuthenticationService {
       );
   }
 
+  public getRole(username): Observable<string> {
+    return this.http.get<Role>(`${url}/role/${username}`)
+      .pipe(
+        map(role => {
+          console.log(role.name);
+          return role.name;
+        }),
+      );
+  }
+
   public logout() {
     this.token = null;
+    this.role = '';
+    this.username = '';
     this.isLoggedIn.next(false);
     this.router.navigate(['/login']);
   }
@@ -42,9 +59,4 @@ export class AuthenticationService {
   public getIsLoggedIn() {
     return this.isLoggedIn.asObservable();
   }
-
-  // public isAuthenticated(): boolean {
-  //   const token = this.getToken();
-  //   return tokenNotExpired(token);
-  // }
 }

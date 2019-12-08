@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {first} from 'rxjs/operators';
 import {AuthenticationService} from '../../service/authentication.service';
+import {AlertService} from '../../service/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -13,17 +14,14 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
-  returnUrl: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthenticationService,
+    private alertService: AlertService,
   ) {
-    // if (this.authenticationService.currentUserValue) {
-    //   this.router.navigate(['/']);
-    // }
   }
 
   ngOnInit() {
@@ -31,21 +29,17 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-
-    // get return url from route parameters or default to '/'
-    // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  // convenience getter for easy access to form fields
-  get f() { return this.loginForm.controls; }
+  get f() {
+    return this.loginForm.controls;
+  }
 
   onSubmit() {
     this.submitted = true;
 
-    // reset alerts on submit
-    // this.alertService.clear();
+    this.alertService.clear();
 
-    // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
@@ -56,13 +50,18 @@ export class LoginComponent implements OnInit {
       .subscribe(
         token => {
           // localStorage.setItem('token', token.jwttoken);
+          this.alertService.success('Successfully logged in.');
           this.auth.token = token.jwttoken;
+          this.auth.username = this.f.username.value;
           this.auth.isLoggedIn.next(true);
           this.router.navigate(['/app']);
         },
         error => {
-          // this.alertService.error(error);
+          this.alertService.error('Wrong username or password.');
           this.loading = false;
         });
+
+    this.auth.getRole(this.f.username.value).subscribe( role => { this.auth.role = role; });
+    console.log(this.auth.role);
   }
 }

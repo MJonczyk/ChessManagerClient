@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpEventType, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
+import {AuthenticationService} from './authentication.service';
 
 const url = 'http://localhost:8080';
 
@@ -9,7 +10,7 @@ const url = 'http://localhost:8080';
 })
 export class FileService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthenticationService) { }
 
   public uploadPGN(files: Set<File>): { [key: string]: {progress: Observable<number> } } {
     const uploadUrl = `${url}/upload`;
@@ -42,6 +43,24 @@ export class FileService {
 
   public downloadPGN(id: number): void {
     const downloadUrl = `${url}/download/${id}`;
+    this.http.get(downloadUrl, {responseType: 'blob' as 'json', observe: 'response'}).subscribe(
+      (response: HttpResponse<Blob>) => {
+        const blob = new Blob([response.body], { type: 'text/plain'});
+        const downloadLink = document.createElement('a');
+
+        downloadLink.href = window.URL.createObjectURL(blob);
+        const filename = response.headers.get('content-disposition')
+          .substring(response.headers.get('content-disposition').indexOf('=') + 1);
+
+        downloadLink.setAttribute('download', filename);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+      }
+    );
+  }
+
+  public downloadDatabase(): void {
+    const downloadUrl = `${url}/download/games/${this.auth.username}`;
     this.http.get(downloadUrl, {responseType: 'blob' as 'json', observe: 'response'}).subscribe(
       (response: HttpResponse<Blob>) => {
         const blob = new Blob([response.body], { type: 'text/plain'});

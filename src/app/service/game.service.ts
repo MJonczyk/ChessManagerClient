@@ -15,6 +15,8 @@ export class GameService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'})
   };
 
+  games: Game[];
+
   constructor(private http: HttpClient) { }
 
   getGames(): Observable<Game[]> {

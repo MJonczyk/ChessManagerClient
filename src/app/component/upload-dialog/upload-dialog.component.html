@@ -3,7 +3,7 @@
 <div class="container" fxLayout="column" fxLayoutAlign="space-evenlystretch">
   <h1 mat-dialog-title>Upload Chess Games</h1>
   <div>
-    <button [disabled]="uploading || uploadSuccessful" mat-raised-button color="primary" class="add-files-btn"
+    <button [disabled]="uploading || uploadSuccessful" mat-raised-button class="add-files-btn"
             (click)="addFiles()">
       Add Files
     </button>
@@ -15,13 +15,17 @@
         <h4 mat-line>{{file.name}}</h4>
         <mat-progress-bar *ngIf="progress" mode="determinate" [value]="progress[file.name].progress | async">
         </mat-progress-bar>
+        <button mat-icon-button color="white" (click)="deleteFile(file)">
+          <mat-icon class="mat-18">delete</mat-icon>
+        </button>
       </mat-list-item>
     </mat-list>
+    <app-alert></app-alert>
   </mat-dialog-content>
 
   <mat-dialog-actions class="actions">
     <button *ngIf="showCancelButton" mat-button mat-dialog-close>Cancel</button>
-    <button mat-raised-button color="primary" [disabled]="!canBeClosed" (click)="closeDialog()">
+    <button mat-raised-button [disabled]="!canBeClosed || wrongFormat || tooBigFile" (click)="closeDialog()">
       {{primaryButtonText}}
     </button>
   </mat-dialog-actions>

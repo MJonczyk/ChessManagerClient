@@ -1,14 +1,14 @@
 <mat-card id="buttonContainer">
-  <button mat-icon-button color="warn">
+  <button mat-icon-button color="warn" (click)="clear()">
     <mat-icon>first_page</mat-icon>
   </button>
-  <button mat-icon-button color="warn">
+  <button mat-icon-button color="warn" (click)="undo()">
     <mat-icon>chevron_left</mat-icon>
   </button>
-  <button mat-icon-button color="warn">
+  <button mat-icon-button color="warn" (click)="nextMove()">
     <mat-icon>chevron_right</mat-icon>
   </button>
-  <button mat-icon-button color="warn">
+  <button mat-icon-button color="warn" (click)="playPGN()">
     <mat-icon>last_page</mat-icon>
   </button>
 </mat-card>

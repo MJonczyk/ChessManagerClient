@@ -23,6 +23,8 @@ import {LoginComponent} from './component/login/login.component';
 import {RegisterComponent} from './component/register/register.component';
 import {AppRoutingModule} from './app-routing.module';
 import {TokenInterceptor} from './helper/TokenInterceptor';
+import {AlertComponent} from './component/alert/alert.component';
+import {DeleteDialogComponent} from './component/delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import {TokenInterceptor} from './helper/TokenInterceptor';
     UploadDialogComponent,
     ChessComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    AlertComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +61,8 @@ import {TokenInterceptor} from './helper/TokenInterceptor';
     MatToolbarModule,
   ],
   entryComponents: [
-    UploadDialogComponent
+    UploadDialogComponent,
+    DeleteDialogComponent
   ],
   providers: [
     {
